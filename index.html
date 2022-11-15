@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>landing</title>
+    <link rel="stylesheet" href="style-grid.css" media="screen">
+    <link rel="stylesheet" href="style-max-1100-grid.css" media="screen and (max-width: 1100px)">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style-mobile.css" media="screen and (max-device-width: 750px)">
+    <link  href="https://fonts.cdnfonts.com/css/univers-lt-std" rel="stylesheet">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/vue@2"></script>
+
+    <script type="text/x-template" id="modal-template">
+      <transition name="modal" >
+        <div class="modal-mask">
+          <div class="modal-wrapper">
+            <div class="modal-container">
+
+              <div class="modal-body">
+                <slot name="body">
+                  <div>il numero inserito è :</div>
+                  <div><b>{{getTelefono()}}</b></div>
+                </slot>
+              </div>
+
+              <div class="modal-footer">
+                <slot name="footer">
+                    <button class="modal-default-button" @click="$emit('close')">
+                      chiudi
+                    </button>
+                </slot>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>
+    </script>
+
+  </head>
+  <body>
+
+    <div class="content">
+      <header>
+        <img src="uploads/LOGO PG GIUSTO 1.png" alt=""id=logo>
+      </header>
+      <main>
+        <hgroup>
+          <h2>RICHIEDI UNA CONSULENZA GRATUITA</h2>
+          <h3>NOI TROVIAMO L'OFFERTA PER LA FIBRA PERFETTA PER TE</h3>
+          <h2>E TU RISPARMI FINO A <span class="price">144€</span> ALL'ANNO</h2>
+        </hgroup>
+        <form id="app" @submit="return checkForm()"  onsubmit="return false" method="post" name="modulo">
+          <div v-if="errors.length" class="error" >
+            <ul>
+                <li v-for="error in errors"id="err">{{ error }}</li>
+              </ul>
+            <div id="tri-con"></div>
+          </div>
+
+          <div class="input">
+            <label for="num_tel">
+              <!-- <input type="tel" id="tel" name="tel_cl" v-model="telefono" placeholder="Inserisci il tuo numero di cellulare" required pattern="[0-9]{3,13}" title="inserisci un numero di telefono valido"> -->
+              <input type="tel" id="tel" name="tel_cl" v-model="telefono" placeholder="Inserisci il tuo numero di cellulare" required title="inserisci un numero di telefono valido">
+            </label>
+            <div>
+              <input type="checkbox" name="" v-model="check" required>
+              <span>Richiedendo il servizio confermo di aver letto e accettato i Termini e Condizioni del Sito e di aver preso visione dell' Informativa sul trattamento dei dati personali. Clicca qui per gestire i consensi.</span>
+            </div>
+            <modal v-if="showModal" @close="closeModal()"></modal>
+
+            </div>
+            <input type="submit"  class="cta" id="show-modal" @click="checkForm()" value="TI CHIAMIAMO NOI">
+          </form>
+          <script>
+            Vue.component("modal", {
+              template: "#modal-template",
+              methods : {
+                  getTelefono(){
+                  return app.telefono
+                  }
+                }
+              });
+
+              var app = new Vue({
+                el: "#app",
+                data: {
+                  showModal: false,
+                  telefono : '',
+                  errors : [],
+                  check : null
+                  },
+                methods: {
+                    modalAction() {
+                    },
+                    marked : ()=>{
+                      return this.data.telefono
+                    },
+                    checkForm: function (e) {
+
+                      if( this.showModal)
+                        return false ;
+
+                      this.errors = [];
+
+                      if (!this.telefono) {
+                        this.errors.push('- inserisci il tuo numero');
+                      }
+                      if (!this.check) {
+                        this.errors.push('- accetta le condizioni');
+                      }
+                      if( this.errors.length == 0 )
+                        this.showModal = true ;
+                      return false ;
+
+
+                    },
+
+                    closeModal:function(){
+                      setTimeout( ()=>{this.showModal = false},200)
+                    }
+                  },
+                });
+
+            </script>
+
+          <div class="icon-wifi">
+            <img src="uploads/Mask Group.png" alt="">
+          </div>
+          <article>
+            <h3>DICONO DI NOI</h3>
+            <section>
+              <div class="corner">
+                  <p><b>Prezzogiusto.com</b> è al <b>1° posto</b> tra le migliori aziende nella categoria Sito di comparazione dei pressi su Trustpilot</p>
+                  <ul>
+                    <li>
+                      <img src="uploads/Vector_star.png" alt=""><span>Trustpilot</span>
+                      <span>Eccezionale</span>
+                    </li>
+                    <li>
+                      <img src="uploads/Group_star.png" alt="">
+                    </li>
+                    <li>
+                      <span>4.9/5</span>
+                      <span>sulla base di oltre 10 mila recensioni</span>
+                    </li>
+                  </ul>
+              </div>
+            </section>
+
+            <section>
+              <div class="cli">
+                <span>
+                  <img src="uploads/tim_LOGO 2.svg" alt="">
+                  <img src="uploads/vodafone_LOGO 2.png" alt="">
+                </span>
+                <span>
+                  <img src="uploads/LogoPiatto_Giallo_NOpayoff_2021_RGB.png" alt="">
+                  <img src="uploads/logo windtre 1.svg" alt="">
+                  <img src="uploads/Eolo_logo 2.png" alt="">
+                </span>
+              </div>
+            </section>
+          </article>
+        </main>
+      <footer>
+        <p><span>© Questa è un'offerta di Prezzogiusto -</span> PREZZOGIUSTO è un servizio offerto da SMART CONTACT SRL • P.IVA 03692630928</p>
+      </footer>
+    </div>
+  </body>
+</html>
